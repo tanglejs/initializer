@@ -16,13 +16,14 @@ module.exports = class InitializerGenerator extends yeoman.generators.Base
     @on 'end', ->
       conf = require('tangle-config').getConf()
       conf.file
-        file: path.join( @settings['initializer:target'], 'tangle.json' )
+        file: path.join( 'app', @settings['initializer:target'], 'tangle.json' )
 
       initializers = conf.get 'initializers'
       initializers ||= {}
 
-      initializers[@settings['initializer:name'].split('.')[0]] =
-        path.join( @settings['initializer:target'], 'initializers', @settings['initializer:name'] )
+      name = @settings['initializer:name'].split('.')[0]
+      initializers[name] =
+        path.join( 'js', @settings['initializer:target'], 'initializers', name )
 
       conf.set 'initializers', initializers
       conf.save (err) -> if err then throw err
@@ -30,7 +31,7 @@ module.exports = class InitializerGenerator extends yeoman.generators.Base
 InitializerGenerator::Prompts =  ->
   done = @async()
 
-  glob '**/tangle.json',
+  glob 'app/**/tangle.json',
     sync: true
   , (err, matches) =>
     @targetChoices  = _.compact _.map matches, (match) =>
@@ -38,7 +39,7 @@ InitializerGenerator::Prompts =  ->
       name = parsed.name
       type = parsed.type
       if (type == 'app' || type == 'module')
-        value = path.dirname(match)
+        value = path.relative('app/', path.dirname(match))
         return { name: "#{name} (#{type}) #{value}/", value: value }
       else
         return  null
@@ -72,4 +73,4 @@ InitializerGenerator::Prompts =  ->
 
 InitializerGenerator::applyTemplate = ->
   @copy @settings['initializer:template'],
-    path.join( @settings['initializer:target'], 'initializers', @settings['initializer:name'] )
+    path.join( 'app', @settings['initializer:target'], 'initializers', @settings['initializer:name'] )
