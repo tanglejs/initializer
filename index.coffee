@@ -23,7 +23,7 @@ module.exports = class InitializerGenerator extends yeoman.generators.Base
 
       name = @settings['initializer:name'].split('.')[0]
       initializers[name] =
-        path.join( 'js', @settings['initializer:target'], 'initializers', name )
+        path.join( @settings['initializer:target'], 'initializers', name )
 
       conf.set 'initializers', initializers
       conf.save (err) -> if err then throw err
@@ -53,10 +53,11 @@ InitializerGenerator::Prompts =  ->
   ,
     type: 'list'
     name: 'initializer:template'
-    message: 'Choose an template'
+    message: 'Choose a template'
     choices: [
       { name: 'empty', value: '_empty.coffee' }
       { name: 'loglevel', value: '_loglevel.coffee' }
+      { name: 'backbone', value: '_backbone.coffee' }
     ]
     default: '_empty.coffee'
   ,
