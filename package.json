@@ -1,5 +1,5 @@
 {
-  "name": "initializer",
+  "name": "tangle-initializer",
   "version": "0.0.0",
   "description": "Tasks for working with tangle initializers",
   "main": "index.coffee",
